@@ -3,40 +3,16 @@
     <div class="container-main flex">
       <div class="left-menu flex">
         <div class="left-menu-main">
-          <jpc-menu
-            :menu-list="liList"
-            :user-data="userData"
-            :menu-change="menuChange"
-            :current="currentAuthIndex"
-          >
-          </jpc-menu>
+          <jpc-menu :menu-list="liList" :user-data="userData" :menu-change="menuChange" :current="currentAuthIndex"></jpc-menu>
         </div>
-        <div class="left-menu__sub"
-          v-for="(item,index) in liList"
-          :style="index===currentAuthIndex?'display:block':'display:none'"
-          :key="index">
+        <div class="left-menu__sub" v-for="(item,index) in liList" :style="index===currentAuthIndex?'display:block':'display:none'" :key="index">
           <h5>{{liList[currentAuthIndex] && liList[currentAuthIndex]['authDesc']}}</h5>
-          <el-menu
-            router
-            :default-active="editableTabsValue"
-            :collapse="isCollapse"
-            background-color="#f4fcf8"
-            active-text-color="#46A976"
-            text-color="#606266">
-            <div
-              v-for="(authItem,index) in item.authList"
-              :index="authItem.authName"
-              :key="authItem.authId">
-              <div slot="title" class="left-menu__sub__title" v-show="index != 0">
-              </div>
+          <el-menu router :default-active="editableTabsValue" :collapse="isCollapse" background-color="#f4fcf8" active-text-color="#46A976" text-color="#606266">
+            <div v-for="(authItem,index) in item.authList" :index="authItem.authName" :key="authItem.authId">
+              <div slot="title" class="left-menu__sub__title" v-show="index != 0"></div>
               <el-menu-item-group>
-                <el-menu-item
-                  v-for="item in authItem.childrenAuthList"
-                  :key="item.authName"
-                  :index="item.authName"
-                  @click="routerClick(item.authDesc,item.authName)"
-                  class="ell"
-                  :style="item.authName==='SelfInquiryList'?'font-weight:bold;font-size:15px;':''">
+                <el-menu-item v-for="item in authItem.childrenAuthList" :key="item.authName" :index="item.authName"
+                  @click="routerClick(item.authDesc,item.authName)" class="ell" :style="item.authName==='SelfInquiryList'?'font-weight:bold;font-size:15px;':''">
                   <span>{{item.authDesc}}</span>
                 </el-menu-item>
               </el-menu-item-group>
@@ -66,22 +42,19 @@
             </el-tabs>
           </div>
           <div>
-            <!-- <jpc-setting
+            <jpc-setting
               :logout="logout"
               :user-data="userData"
               :inquiry-length="inquiryLength"
             >
-            </jpc-setting> -->
+            </jpc-setting>
           </div>
         </div>
-
         <div class="flex-1 router-container">
           <keep-alive :include="routerCacheArr">
             <router-view :router-back="routerBack" :router-click="routerClick"></router-view>
           </keep-alive>
         </div>
-        
-        <button class="logout" @click='logout'>退出</button>
       </div>
     </div>
   </div>
@@ -90,6 +63,7 @@
 <script>
   import {showDeleteConfirm, showInfoMessage} from '../api/api'
   import JpcMenu from "./common/jpcMenu"
+  import JpcSetting from "./common/jpcSetting"
 
   export default {
     name:'',
@@ -140,10 +114,11 @@
             }
           ]
         }],
-        userData:[]
+        userData:{name:'pengzhihua'},
+        inquiryLength:1
       }
     },
-    components:{JpcMenu},
+    components:{JpcMenu,JpcSetting},
     methods:{
       logout: function () {
         showDeleteConfirm(() => {
@@ -178,9 +153,10 @@
         //判断当前标签页是否已经打开
         let tempF = false
         let tempParams = null
+        console.log(this.editableTabs)
         for (let i = 0; i < this.editableTabs.length; i++) {
           if (this.editableTabs[i].name == tabItem.name) {
-            this.editableTabs[i].label = tabItem.label
+            // this.editableTabs[i].label = tabItem.label   //  为何要这行代码？？？
             //覆盖原有参数
             /* if (params) {
               this.editableTabs[i].params = params
@@ -196,11 +172,11 @@
           this.editableTabs.push(tabItem)
         }
 
-        // 当前选下卡亮
-        let index = this.authSignList[0].indexOf(routerName)
+        // 当前选项卡亮
+        // let index = this.authSignList[0].indexOf(routerName)
         //  有部分详情页面或者编辑页面，无需切换高亮
-        if (index !== -1)
-          this.currentAuthIndex = this.authSignList[1][index]
+       /*  if (index !== -1)
+          this.currentAuthIndex = this.authSignList[1][index] */
 
         // tab标签高亮
         this.editableTabsValue = routerName
@@ -211,7 +187,6 @@
           params: tempParams || params
         }
         this.$router.push(path)
-        console.log(this.routerCacheArr)
         //添加至缓存
         if (this.routerCacheArr.indexOf(routerName) == -1) {
           this.routerCacheArr.push(routerName)
@@ -283,6 +258,12 @@
   height: 100%;
   width: 6.42857rem;
 }
+.left-menu .left-menu__sub>h5{
+  height: 2.57143rem;
+  line-height: 3.57143rem;
+  padding: 0 1.07143rem;
+  color: #303133;
+}
 .left-menu .left-menu__sub{
   height: 100%;
   width: 7.85714rem;
@@ -338,5 +319,18 @@
 }
 .el-tabs__item.is-active {
   color: #46a976;
+}
+.header-nav{
+  height: 3.57143rem;
+  line-height: 2.57143rem;
+  padding-bottom:15px;
+  box-sizing: border-box;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+  -ms-flex-direction: row;
+  flex-direction: row;
 }
 </style>

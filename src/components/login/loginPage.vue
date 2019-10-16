@@ -118,7 +118,7 @@
             sessionStorage.setItem("userData", JSON.stringify(res.data));
             this.$message({
               type: "success",
-              message: res.message,
+              message: res.data.message,
               duration: 1000
             });
             this.$router.push("/index/Pandect");
