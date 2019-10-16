@@ -10,9 +10,7 @@
           @click="menuChange(index + 1)"
           v-for="(item,index) in menuList"
           v-bind:class="{ liActive:index == current}">
-          <span :class="`nav-icon icon-${item.authName}`">
-            {{item.authDesc}}
-          </span>
+          <span :class="`nav-icon icon-${item.authName}`">{{item.authDesc}}</span>
         </li>
       </ul>
     </div>
